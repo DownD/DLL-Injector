@@ -1,0 +1,8 @@
+C:/Users/migue/source/repos/DownD/Blackbone/src/out/build/x64-Debug (default)/CMakeFiles/edit_cache.dir
+C:/Users/migue/source/repos/DownD/Blackbone/src/out/build/x64-Debug (default)/CMakeFiles/rebuild_cache.dir
+C:/Users/migue/source/repos/DownD/Blackbone/src/out/build/x64-Debug (default)/BlackBone/CMakeFiles/BlackBone.dir
+C:/Users/migue/source/repos/DownD/Blackbone/src/out/build/x64-Debug (default)/BlackBone/CMakeFiles/edit_cache.dir
+C:/Users/migue/source/repos/DownD/Blackbone/src/out/build/x64-Debug (default)/BlackBone/CMakeFiles/rebuild_cache.dir
+C:/Users/migue/source/repos/DownD/Blackbone/src/out/build/x64-Debug (default)/Samples/CMakeFiles/Samples.dir
+C:/Users/migue/source/repos/DownD/Blackbone/src/out/build/x64-Debug (default)/Samples/CMakeFiles/edit_cache.dir
+C:/Users/migue/source/repos/DownD/Blackbone/src/out/build/x64-Debug (default)/Samples/CMakeFiles/rebuild_cache.dir

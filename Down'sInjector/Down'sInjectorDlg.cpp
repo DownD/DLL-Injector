@@ -13,6 +13,10 @@
 #define new DEBUG_NEW
 #endif
 
+struct DllArgs {
+	wchar_t path[256];
+};
+
 void waitForProcess(CDownsInjectorDlg* dlg) {
 
 	while (dlg->threadRunning()) {
@@ -56,8 +60,10 @@ void waitForProcess(CDownsInjectorDlg* dlg) {
 				if (threadh->GetCheck() == BST_CHECKED) {
 					flags |= blackbone::NoThreads;
 				}
+				DllArgs arg = { 0 };
+				memcpy(arg.path, wPath.data(), wPath.size()*sizeof(wchar_t));
 				blackbone::CustomArgs_t args;
-				args.push_back(wPath);
+				args.push_back(&arg);
 				auto addr = prc.mmap().MapImage(wPath,flags,nullptr,nullptr,&args);
 				if (!addr) {
 					std::wstring str = L"Fail to inject" + wPath + L" into process id " + std::to_wstring(targetId) + L"\n";

@@ -34,12 +34,23 @@ CDownsInjectorApp::CDownsInjectorApp()
 // The one and only CDownsInjectorApp object
 
 CDownsInjectorApp theApp;
+void SetupConsole()
+{
+	AllocConsole();
+	freopen("CONOUT$", "wb", stdout);
+	freopen("CONOUT$", "wb", stderr);
+	freopen("CONIN$", "rb", stdin);
+	SetConsoleTitle(L"Debug Console");
+}
 
 
 // CDownsInjectorApp initialization
 
 BOOL CDownsInjectorApp::InitInstance()
 {
+#ifdef _DEBUG
+	SetupConsole();
+#endif
 	// InitCommonControlsEx() is required on Windows XP if an application
 	// manifest specifies use of ComCtl32.dll version 6 or later to enable
 	// visual styles.  Otherwise, any window creation will fail.

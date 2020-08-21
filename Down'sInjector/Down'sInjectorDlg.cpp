@@ -40,9 +40,29 @@ void waitForProcess(CDownsInjectorDlg* dlg) {
 				fileEditBox->GetWindowText(cPath);
 				std::wstring wPath(cPath);
 
-				auto addr = prc.mmap().MapImage(wPath);
+				//MM options
+				auto flags = blackbone::NoFlags;
+
+				CButton* sxs = (CButton*)dlg->GetDlgItem(IDC_CHECK_MAP_SXS);
+				if (sxs->GetCheck() == BST_CHECKED) {
+					flags |= blackbone::NoSxS;
+				}
+				CButton* exceptions = (CButton*)dlg->GetDlgItem(IDC_CHECK_MAP_EXCEPTION);
+				if (exceptions->GetCheck() == BST_CHECKED) {
+					flags |= blackbone::NoExceptions;
+				}
+
+				CButton* threadh = (CButton*)dlg->GetDlgItem(IDC_CHECK_MAP_THREAD_HIJACK);
+				if (threadh->GetCheck() == BST_CHECKED) {
+					flags |= blackbone::NoThreads;
+				}
+				blackbone::CustomArgs_t args;
+				args.push_back(wPath);
+				auto addr = prc.mmap().MapImage(wPath,flags,nullptr,nullptr,&args);
 				if (!addr) {
-					std::wstring str = L"Fail to inject into process id " + std::to_wstring(targetId);
+					std::wstring str = L"Fail to inject" + wPath + L" into process id " + std::to_wstring(targetId) + L"\n";
+					str += L"Status Code = " + std::to_wstring(addr.status) + L"\n";
+					str += blackbone::Utils::GetErrorDescription(addr.status);
 					MessageBox(NULL, str.c_str(), L"Error on Injection", MB_OK);
 					dlg->endThreadUnsucessfull();
 					return;

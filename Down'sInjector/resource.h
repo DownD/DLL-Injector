@@ -19,6 +19,11 @@
 #define IDC_CHECK1                      1004
 #define IDC_CLOSE_CHECK                 1004
 #define IDC_STATIC_STATUS_MSG           1005
+#define IDC_STATIC_MANUAL_OPTIONS       1012
+#define IDC_CHECK_MAP_SXS               1013
+#define IDC_CHECK_MAP_EXCEPTION         1015
+#define IDC_CHECK_MAP_SXS2              1016
+#define IDC_CHECK_MAP_THREAD_HIJACK     1016
 
 // Next default values for new objects
 // 
@@ -26,7 +31,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1006
+#define _APS_NEXT_CONTROL_VALUE         1017
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

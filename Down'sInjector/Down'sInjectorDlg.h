@@ -42,4 +42,6 @@ public:
 private:
 	bool isThreadRunning;
 	std::thread th;
+public:
+	afx_msg void OnBnClickedCheckMapSxs();
 };

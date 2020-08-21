@@ -389,6 +389,7 @@ call_result_t<ModuleDataPtr> MMap::FindOrMapModule(
         status = CreateActx( pImage->peImage );
         if (!NT_SUCCESS( status ))
         {
+            BLACKBONE_TRACE(L"ManualMap: Fail Creating Activation context, status 0x%X",status);
             pImage->peImage.Release();
             return status;
         }
@@ -398,12 +399,14 @@ call_result_t<ModuleDataPtr> MMap::FindOrMapModule(
     if (!NT_SUCCESS( status = CopyImage( pImage ) ))
     {
         pImage->peImage.Release();
+        BLACKBONE_TRACE(L"ManualMap: Fail on core mapping operations, status 0x%X", status);
         return status;
     }
 
     if (!NT_SUCCESS( status = RelocateImage( pImage ) ))
     {
         pImage->peImage.Release();
+        BLACKBONE_TRACE(L"ManualMap: Fail preforming relocations, status 0x%X", status);
         return status;
     }
 
@@ -426,6 +429,7 @@ call_result_t<ModuleDataPtr> MMap::FindOrMapModule(
         {
             pImage->peImage.Release();
             _process.modules().RemoveManualModule( ldrEntry.name, mt );
+            BLACKBONE_TRACE(L"ManualMap: Fail resolving import, status 0x%X", status);
             return status;
         }
 
@@ -434,6 +438,7 @@ call_result_t<ModuleDataPtr> MMap::FindOrMapModule(
         {
             pImage->peImage.Release();
             _process.modules().RemoveManualModule( ldrEntry.name, mt );
+            BLACKBONE_TRACE(L"ManualMap: Fail resolving delayed import, status 0x%X", status);
             return status;
         }
     }
@@ -468,6 +473,7 @@ call_result_t<ModuleDataPtr> MMap::FindOrMapModule(
     {
         pImage->peImage.Release();
         _process.modules().RemoveManualModule( ldrEntry.name, mt );
+        BLACKBONE_TRACE(L"ManualMap: Fail unlinking image from VAD list, status 0x%X", status);
         return status;
     }
 

@@ -8,6 +8,7 @@
 #include <DbgHelp.h>
 #pragma warning(pop)
 
+
 namespace blackbone
 {
 #ifndef BLACKBONE_NO_TRACE

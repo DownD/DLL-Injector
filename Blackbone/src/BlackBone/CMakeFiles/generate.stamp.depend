@@ -1,0 +1,14 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.19/Modules/CMakeASMCompiler.cmake.in
+C:/Program Files/CMake/share/cmake-3.19/Modules/CMakeASMInformation.cmake
+C:/Program Files/CMake/share/cmake-3.19/Modules/CMakeASM_MASMInformation.cmake
+C:/Program Files/CMake/share/cmake-3.19/Modules/CMakeCompilerIdDetection.cmake
+C:/Program Files/CMake/share/cmake-3.19/Modules/CMakeDetermineASMCompiler.cmake
+C:/Program Files/CMake/share/cmake-3.19/Modules/CMakeDetermineASM_MASMCompiler.cmake
+C:/Program Files/CMake/share/cmake-3.19/Modules/CMakeDetermineCompiler.cmake
+C:/Program Files/CMake/share/cmake-3.19/Modules/CMakeDetermineCompilerId.cmake
+C:/Program Files/CMake/share/cmake-3.19/Modules/CMakeFindBinUtils.cmake
+C:/Program Files/CMake/share/cmake-3.19/Modules/CMakeTestASMCompiler.cmake
+C:/Program Files/CMake/share/cmake-3.19/Modules/CMakeTestASM_MASMCompiler.cmake
+C:/Users/migue/Source/Repos/DownD/Down-sInjector/Blackbone/src/BlackBone/CMakeLists.txt
+C:/Users/migue/Source/Repos/DownD/Down-sInjector/Blackbone/src/CMakeFiles/3.19.1/CMakeASM_MASMCompiler.cmake

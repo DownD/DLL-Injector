@@ -13,11 +13,8 @@
 #define new DEBUG_NEW
 #endif
 
-struct DllArgs {
-	wchar_t path[256];
-};
 
-void waitForProcess(CDownsInjectorDlg* dlg) {
+void searchWindowAndInject(CDownsInjectorDlg* dlg) {
 
 	while (dlg->threadRunning()) {
 		DWORD targetId;
@@ -60,11 +57,7 @@ void waitForProcess(CDownsInjectorDlg* dlg) {
 				if (threadh->GetCheck() == BST_CHECKED) {
 					flags |= blackbone::NoThreads;
 				}
-				DllArgs arg = { 0 };
-				memcpy(arg.path, wPath.data(), wPath.size()*sizeof(wchar_t));
-				blackbone::CustomArgs_t args;
-				args.push_back(&arg);
-				auto addr = prc.mmap().MapImage(wPath,flags,nullptr,nullptr,&args);
+				auto addr = prc.mmap().MapImage(wPath,flags,nullptr,nullptr);
 				if (!addr) {
 					std::wstring str = L"Fail to inject" + wPath + L" into process id " + std::to_wstring(targetId) + L"\n";
 					str += L"Status Code = " + std::to_wstring(addr.status) + L"\n";
@@ -177,6 +170,9 @@ BEGIN_MESSAGE_MAP(CDownsInjectorDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDOK, &CDownsInjectorDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_BUTTON1, &CDownsInjectorDlg::OnChooseFileBnClickedButton)
+	ON_BN_CLICKED(IDC_CHOSE_FILE_BTN, &CDownsInjectorDlg::OnBnClickedChoseFileBtn)
+	ON_BN_CLICKED(IDC_SELECT_PROCESS_FILE, &CDownsInjectorDlg::OnBnClickedSelectProcessFile)
+	ON_BN_CLICKED(IDC_SELECT_WINDOW, &CDownsInjectorDlg::OnBnClickedSelectWindow)
 END_MESSAGE_MAP()
 
 
@@ -271,26 +267,38 @@ void CDownsInjectorDlg::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
 	//CDialogEx::OnOK();
-	CStatic* status = (CStatic*)GetDlgItem(IDC_STATIC_STATUS_MSG);
-	if (isThreadRunning) {
-		isThreadRunning = false;
-		if (th.joinable()) {
-			th.join();
+
+	CButton* executeFileBtn = (CButton*)GetDlgItem(IDC_SELECT_PROCESS_FILE);
+	CButton* injectWindowBtn = (CButton*)GetDlgItem(IDC_SELECT_WINDOW);
+
+	if (injectWindowBtn->GetCheck() == BST_CHECKED) {
+		CStatic* status = (CStatic*)GetDlgItem(IDC_STATIC_STATUS_MSG);
+		if (isThreadRunning) {
+			isThreadRunning = false;
+			if (th.joinable()) {
+				th.join();
+			}
+			CButton* bt = (CButton*)GetDlgItem(IDOK);
+			bt->SetWindowTextW(TEXT("Inject"));
+			CString statusMsg;
+			statusMsg.LoadString(IDS_STRING102);
+			status->SetWindowText(statusMsg);
 		}
-		CButton* bt = (CButton*)GetDlgItem(IDOK);
-		bt->SetWindowTextW(TEXT("Inject"));
-		CString statusMsg;
-		statusMsg.LoadString(IDS_STRING102);
-		status->SetWindowText(statusMsg);
+		else {
+			isThreadRunning = true;
+			th = std::thread(searchWindowAndInject, this);
+			CButton* bt = (CButton*)GetDlgItem(IDOK);
+			bt->SetWindowTextW(TEXT("Cancel Injection"));
+			CString statusMsg;
+			statusMsg.LoadString(IDS_STRING103);
+			status->SetWindowText(statusMsg);
+		}
+	}
+	else if (executeFileBtn->GetCheck() == BST_CHECKED) {
+
 	}
 	else {
-		isThreadRunning = true;
-		th = std::thread(waitForProcess, this);
-		CButton* bt = (CButton*)GetDlgItem(IDOK);
-		bt->SetWindowTextW(TEXT("Cancel Injection"));
-		CString statusMsg;
-		statusMsg.LoadString(IDS_STRING103);
-		status->SetWindowText(statusMsg);
+		MessageBox(TEXT("You need to select a process selection type."), TEXT("Error"), MB_OK);
 	}
 }
 
@@ -326,3 +334,47 @@ void CDownsInjectorDlg::OnChooseFileBnClickedButton()
 
 }
 
+
+
+void CDownsInjectorDlg::OnBnClickedChoseFileBtn()
+{
+	CEdit* fileEditBox = (CEdit*)GetDlgItem(IDC_CHOSE_FILE_EDIT);
+	CString initText;
+	fileEditBox->GetWindowText(initText);
+
+	const TCHAR szFilter[] = _T("EXE Files (*.exe)|*.exe|");
+	CFileDialog dlg(TRUE, _T("Select process to be started"), initText, OFN_NOCHANGEDIR, szFilter, this);
+	if (dlg.DoModal() == IDOK)
+	{
+		CString sFilePath = dlg.GetPathName();
+		fileEditBox->SetWindowText(sFilePath);
+
+		//Set Status
+		CStatic* status = (CStatic*)GetDlgItem(IDC_STATIC_STATUS_MSG);
+		CString statusMsg;
+		statusMsg.LoadString(IDS_STRING102);
+		status->SetWindowText(statusMsg);
+	}
+}
+
+
+void CDownsInjectorDlg::OnBnClickedSelectProcessFile()
+{
+	CEdit* fileEditBox = (CEdit*)GetDlgItem(IDC_CHOSE_FILE_EDIT);
+	CButton* fileBtn = (CButton*)GetDlgItem(IDC_CHOSE_FILE_BTN);
+	CButton* asapBtn = (CButton*)GetDlgItem(IDC_HANDLE_ASAP);
+	fileEditBox->ShowWindow(SW_SHOW);
+	fileBtn->ShowWindow(SW_SHOW);
+	asapBtn->EnableWindow();
+}
+
+
+void CDownsInjectorDlg::OnBnClickedSelectWindow()
+{
+	CEdit* fileEditBox = (CEdit*)GetDlgItem(IDC_CHOSE_FILE_EDIT);
+	CButton* fileBtn = (CButton*)GetDlgItem(IDC_CHOSE_FILE_BTN);
+	CButton* asapBtn = (CButton*)GetDlgItem(IDC_HANDLE_ASAP);
+	fileEditBox->ShowWindow(SW_HIDE);
+	fileBtn->ShowWindow(SW_HIDE);
+	asapBtn->EnableWindow(FALSE);
+}

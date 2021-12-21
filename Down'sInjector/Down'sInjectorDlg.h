@@ -44,4 +44,11 @@ private:
 	std::thread th;
 public:
 	afx_msg void OnBnClickedCheckMapSxs();
+	afx_msg void OnBnClickedStaticManualOptions2();
+	afx_msg void OnBnClickedRadio3();
+	afx_msg void OnBnClickedRadio4();
+	afx_msg void OnBnClickedRadio5();
+	afx_msg void OnBnClickedChoseFileBtn();
+	afx_msg void OnBnClickedSelectProcessFile();
+	afx_msg void OnBnClickedSelectWindow();
 };

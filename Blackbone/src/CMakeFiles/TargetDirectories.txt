@@ -1,6 +1,0 @@
-C:/Users/migue/Source/Repos/DownD/Down-sInjector/Blackbone/src/CMakeFiles/ALL_BUILD.dir
-C:/Users/migue/Source/Repos/DownD/Down-sInjector/Blackbone/src/CMakeFiles/ZERO_CHECK.dir
-C:/Users/migue/Source/Repos/DownD/Down-sInjector/Blackbone/src/BlackBone/CMakeFiles/BlackBone.dir
-C:/Users/migue/Source/Repos/DownD/Down-sInjector/Blackbone/src/BlackBone/CMakeFiles/ALL_BUILD.dir
-C:/Users/migue/Source/Repos/DownD/Down-sInjector/Blackbone/src/Samples/CMakeFiles/Samples.dir
-C:/Users/migue/Source/Repos/DownD/Down-sInjector/Blackbone/src/Samples/CMakeFiles/ALL_BUILD.dir

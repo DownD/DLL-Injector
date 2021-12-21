@@ -1,7 +1,7 @@
 # Down-sInjector
 ONLY FOR LEARNING PURPOSES<br>
 Simple Windows DLL injector GUI with MFC using 
-This solution contains 2 different projects (InjectorGUI and InjectorCLI) based on BlackBone API by DarthTon(https://github.com/DarthTon/Blackbone).
+This solution contains 2 different projects (InjectorGUI and InjectorCLI) based on [BlackBone](https://github.com/DarthTon/Blackbone) API by DarthTon.
 Injector CLI implements more complex methods.
 
 ## GUI-Injector
@@ -11,14 +11,14 @@ After pressing inject, it will wait until the user select another window, and wi
 For now only manual-mapping is available for both x86 and x86_64.
 
 ## CLI-Injector
-![img](https://gyazo.com/2f8ae4c0b83155f92095794326cdd48f)
+![img](https://i.gyazo.com/2f8ae4c0b83155f92095794326cdd48f.png)
 This CLI binary provides multiple options for injecting, it also can execute in the background and inject the dll into multiple processes that can be selected by window name or process name.
 
 This support multiple types of DLL injections:
 - Manual-Mapping / LoadLibraryA Injection
 - Auto-execution - launches the target process
 - Auto-injection - keeps the injector in the background and injects the dll on every window or process that matches the option provided
-- ASAP Handles - a technique mentioned !here(https://www.unknowncheats.me/forum/anti-cheat-bypass/236135-asap-handles-v2-getting-handle-process-getting-stripped.html) that allows for the injector to get an handle before every process one the system, bypassing some protections, this methos should only be used with manual mapping injection because the system might not have time to load Kernel32.dll that is required to load LoadLibraryA.
+- ASAP Handles - a technique mentioned [here](https://www.unknowncheats.me/forum/anti-cheat-bypass/236135-asap-handles-v2-getting-handle-process-getting-stripped.html) that allows for the injector to get an handle before every process one the system, bypassing some protections, this methos should only be used with manual mapping injection because the system might not have time to load Kernel32.dll that is required to load LoadLibraryA.
 ```
 Usage: InjectorCLI [OPTIONS] <PATH_TO_DLL>...
   -m, -M, --mapping=STANDART Set's the type of mapping, this field can take the following values: STANDART,MANUAL

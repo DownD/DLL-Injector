@@ -51,11 +51,11 @@ steal_handle_job option uses a different technique to inject.
 
 
 ## Compilation
-Make sure to install all dependencies required by BlackBone(https://github.com/DarthTon/Blackbone), and also these ones:
+Make sure to install all dependencies required by [BlackBone](https://github.com/DarthTon/Blackbone), and also these ones:
 - Net Framework 4.7.1 Software Development Kit
 
 The compilation must be done with the toolset v142.
-For a different compiler version, the BlackBone(https://github.com/DarthTon/Blackbone) library located on the External folder, must also be compiled with the same compiler.
+For a different compiler version, the [BlackBone](https://github.com/DarthTon/Blackbone) library located on the External folder, must also be compiled with the same compiler.
 
 ## Notes
 On future implementations the both projects could be merge in order to have a user interface for a more powerfull injector

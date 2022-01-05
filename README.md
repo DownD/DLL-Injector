@@ -1,6 +1,5 @@
 # DLL-Injector
 ONLY FOR LEARNING PURPOSES<br>
-Simple Windows DLL injector GUI with MFC using <br>
 This solution contains 2 different projects (InjectorGUI <Down'sInjector> and InjectorCLI) based on [BlackBone](https://github.com/DarthTon/Blackbone) API by DarthTon.<br>
 Injector CLI implements more complex methods.
 

@@ -1,7 +1,7 @@
-# Down-sInjector
+# DLL-Injector
 ONLY FOR LEARNING PURPOSES<br>
-Simple Windows DLL injector GUI with MFC using 
-This solution contains 2 different projects (InjectorGUI and InjectorCLI) based on [BlackBone](https://github.com/DarthTon/Blackbone) API by DarthTon.
+Simple Windows DLL injector GUI with MFC using <br>
+This solution contains 2 different projects (InjectorGUI <Down'sInjector> and InjectorCLI) based on [BlackBone](https://github.com/DarthTon/Blackbone) API by DarthTon.<br>
 Injector CLI implements more complex methods.
 
 ## GUI-Injector
@@ -40,22 +40,22 @@ steal_handle_job option uses a different technique to inject.
 ```
 ### Examples
 
-- This will inject dummy.dll into every process_name.exe that is executed after
-``` InjectorCLI.exe -m STANDART --auto_inject "process_name.exe" "C:\path_to_dll\dummy.dll" ````
+- This will inject dummy.dll into every process_name.exe that is executed after<br><br>
+``` InjectorCLI.exe -m STANDART --auto_inject "process_name.exe" "C:\path_to_dll\dummy.dll" ```
 
-- This will inject dummy.dll (Only once per process) into every window with the title as "process_name_window" that is executed after
-``` InjectorCLI.exe -m STANDART --auto_inject_window "process_name_window" "C:\path_to_dll\dummy.dll" ````
+- This will inject dummy.dll (Only once per process) into every window with the title as "process_name_window" that is executed after<br>
+``` InjectorCLI.exe -m STANDART --auto_inject_window "process_name_window" "C:\path_to_dll\dummy.dll" ```
 
-- This will launch the process process.exe and inject dummy.dll using manual map with the ASAP handle method
-``` InjectorCLI.exe -m MANUAL --steal_handle_job -process_path "C:\path_to_dll\process.exe" "C:\path_to_dll\dummy.dll" ````
+- This will launch the process process.exe and inject dummy.dll using manual map with the ASAP handle method<br>
+``` InjectorCLI.exe -m MANUAL --steal_handle_job -process_path "C:\path_to_dll\process.exe" "C:\path_to_dll\dummy.dll" ```
 
 
 ## Compilation
 Make sure to install all dependencies required by [BlackBone](https://github.com/DarthTon/Blackbone), and also these ones:
 - Net Framework 4.7.1 Software Development Kit
 
-The compilation must be done with the toolset v142.
-For a different compiler version, the [BlackBone](https://github.com/DarthTon/Blackbone) library located on the External folder, must also be compiled with the same compiler.
+Due to the github having a limit of 25mb per file you need to compile the [BlackBone](https://github.com/DarthTon/Blackbone) library and paste it into /External/lib/<architeture>/<configration>/.<br>
+Example: Release 64 bits -> /External/lib/x64/Release/BlackBone.lib
 
 ## Notes
 On future implementations the both projects could be merge in order to have a user interface for a more powerfull injector

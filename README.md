@@ -48,16 +48,17 @@ steal_handle_job option uses a different technique to inject.
 - This will launch the process process.exe and inject dummy.dll using manual map with the ASAP handle method<br>
 ``` InjectorCLI.exe -m MANUAL -s -process_path "C:\path_to_dll\process.exe" "C:\path_to_dll\dummy.dll" ```
 
+## External Dependencies
+- [BlackBone](https://github.com/DarthTon/Blackbone)
+- [argparse](https://github.com/cofyc/argparse)
+
 
 ## Compilation
 Make sure to install all dependencies required by [BlackBone](https://github.com/DarthTon/Blackbone), and also these ones:
 - Net Framework 4.7.1 Software Development Kit
 - MFC v143 build tools (x86 & x64)
 
-Due to the github having a limit of 25mb per file you need to compile the [BlackBone](https://github.com/DarthTon/Blackbone) library and paste it into /External/lib/<architeture>/<configration>/.<br>
-Example: Release 64 bits -> /External/lib/x64/Release/BlackBone.lib
-
-### Fixing issues
+### Possible issues
 If VisualStudio outputs and error like this:
 ```Error	C2275	'blackbone::_UNICODE_STRING_T<uint32_t>::type': expected an expression instead of a type```
 Make sure to set BlackBone's C++ version to C++17, this can be done by right clicking the project -> Properties -> General Properties -> C++ Language Standard -> ISO C++17

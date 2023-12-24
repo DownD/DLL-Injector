@@ -1,0 +1,110 @@
+{
+  "$schema": "https://raw.githubusercontent.com/spdx/spdx-spec/v2.2.1/schemas/spdx-schema.json",
+  "spdxVersion": "SPDX-2.2",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "documentNamespace": "https://spdx.org/spdxdocs/argparse-x64-windows-static-2.9-0c6e1e55-6a58-45f7-868c-0dd3f7ba828f",
+  "name": "argparse:x64-windows-static@2.9 30dda4d00bd0afa3c22862985b9c04894b2b1d8588a079bce350a214c1f3da98",
+  "creationInfo": {
+    "creators": [
+      "Tool: vcpkg-ac02a9f660977426b8ec6392919fbb1d51b10998"
+    ],
+    "created": "2023-12-24T14:00:04Z"
+  },
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "GENERATES",
+      "relatedSpdxElement": "SPDXRef-binary"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-0"
+    },
+    {
+      "spdxElementId": "SPDXRef-port",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-file-1"
+    },
+    {
+      "spdxElementId": "SPDXRef-binary",
+      "relationshipType": "GENERATED_FROM",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-0",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    },
+    {
+      "spdxElementId": "SPDXRef-file-1",
+      "relationshipType": "CONTAINED_BY",
+      "relatedSpdxElement": "SPDXRef-port"
+    }
+  ],
+  "packages": [
+    {
+      "name": "argparse",
+      "SPDXID": "SPDXRef-port",
+      "versionInfo": "2.9",
+      "downloadLocation": "git+https://github.com/Microsoft/vcpkg@007156cde2fbc16b990f1a8cd0a29664873a923c",
+      "homepage": "https://github.com/p-ranav/argparse",
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "description": "Argument parser for modern C++",
+      "comment": "This is the port (recipe) consumed by vcpkg."
+    },
+    {
+      "name": "argparse:x64-windows-static",
+      "SPDXID": "SPDXRef-binary",
+      "versionInfo": "30dda4d00bd0afa3c22862985b9c04894b2b1d8588a079bce350a214c1f3da98",
+      "downloadLocation": "NONE",
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "comment": "This is a binary package built by vcpkg."
+    },
+    {
+      "SPDXID": "SPDXRef-resource-1",
+      "name": "p-ranav/argparse",
+      "downloadLocation": "git+https://github.com/p-ranav/argparse@997da9255618311d1fcb0135ce86022729d1f1cb",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA512",
+          "checksumValue": "241e6a1ec76133b7ad4ab3984b1b4e08129f3dac80fc26a0010c9450ab83131ec9e2472844eba30265f2a6f1e94c7b7c07175f11a22553bd61a099b1bb148ef7"
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "fileName": "./C:/vcpkg/buildtrees/versioning_/versions/argparse/007156cde2fbc16b990f1a8cd0a29664873a923c/portfile.cmake",
+      "SPDXID": "SPDXRef-file-0",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "bc7cf6bb09ee97c041eab80798c4282dd690fac98c8e6ae03b24d6c3d3601f49"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./C:/vcpkg/buildtrees/versioning_/versions/argparse/007156cde2fbc16b990f1a8cd0a29664873a923c/vcpkg.json",
+      "SPDXID": "SPDXRef-file-1",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "434cc0a7d981dd5c406e6b7892cb5aedbc20e4dda698fe8b00546637b9e8ebb4"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    }
+  ]
+}

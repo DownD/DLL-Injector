@@ -21,18 +21,12 @@
     <ClCompile Include="CInjector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cargs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CInjector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="util.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cargs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

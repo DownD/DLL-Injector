@@ -2,8 +2,6 @@
 #include "BlackBone/Process/Process.h"
 #include "BlackBone/PE/PEImage.h"
 #include <locale>
-#include <codecvt>
-#include "util.hpp"
 #include "psapi.h"
 
 
@@ -144,6 +142,7 @@ bool CInjector::InjectFromClickingWindow(CDllMap& mapper, std::string dll)
 
 HANDLE CInjector::CreateProcessAndStealHandle(std::string& file)
 {
+	DEBUG_LOG("Creating process and stealing handle for %s", file.c_str());
 	auto pid = 0UL;
 	//auto desk_hwnd = GetShellWindow(); //auto desk_hwnd = FindWindow(0, L"Steam"); for steam games
 	auto ret = GetCurrentProcessId();//GetWindowThreadProcessId(desk_hwnd, &pid);
@@ -455,6 +454,7 @@ bool CLoadLibrary::mapImage(HANDLE h, std::string dll)
 		DWORD return_value;
 		if (GetExitCodeThread(hThread, &return_value)) {
 			if (return_value == 0) {
+				// Second thread used to get error code
 				HANDLE hThread2 = CreateRemoteThread(h, nullptr, NULL, LPTHREAD_START_ROUTINE(GetLastErrorAddr),NULL, NULL, nullptr);
 				DWORD last_error_value = 0;
 				if (hThread2 && WaitForSingleObject(hThread2, 10000) == WAIT_OBJECT_0 && GetExitCodeThread(hThread2, &last_error_value)) {

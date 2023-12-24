@@ -1,12 +1,17 @@
 #pragma once
+#define NOMINMAX
 #include <windows.h>
 #include <iostream>
 #include <stdio.h> 
 #include <string>
 #include <set>
-#define LOADLIBRARY_A 1
-#define MANUAL_MAP 2
+#include "util.hpp"
 
+
+enum MAPPING_TYPE {
+	LOADLIBRARY = 1,
+	MANUAL_MAP = 2
+};
 
 
 

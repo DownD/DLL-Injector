@@ -46,7 +46,7 @@ steal_handle_job option uses a different technique to inject.
 ``` InjectorCLI.exe -m STANDART --auto_inject_window "process_name_window" "C:\path_to_dll\dummy.dll" ```
 
 - This will launch the process process.exe and inject dummy.dll using manual map with the ASAP handle method<br>
-``` InjectorCLI.exe -m MANUAL --steal_handle_job -process_path "C:\path_to_dll\process.exe" "C:\path_to_dll\dummy.dll" ```
+``` InjectorCLI.exe -m MANUAL -s -process_path "C:\path_to_dll\process.exe" "C:\path_to_dll\dummy.dll" ```
 
 
 ## Compilation

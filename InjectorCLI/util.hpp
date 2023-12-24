@@ -1,20 +1,13 @@
 #pragma once
 #include <iostream>
-#include <stdio.h>
+#include <codecvt>
 
-
-#ifndef _DEBUG
-auto f = fopen("injector_log.txt","w");
-#define ERROR_LOG(...){fprintf(f,__VA_ARGS__); fprintf(f,"\n");fflush(f);}
-#define DEBUG_LOG(...){fprintf(f,__VA_ARGS__); fprintf(f,"\n");fflush(f);}
-#else
 
 #define ERROR_LOG(...){printf(__VA_ARGS__); printf("\n");fflush(stdout);}
 #define DEBUG_LOG(...){printf(__VA_ARGS__); printf("\n");fflush(stdout);}
-#endif
 
 
-std::string WcharToChar(std::wstring const& wstr)
+inline std::string WcharToChar(std::wstring const& wstr)
 {
 
     //setup converter
@@ -27,7 +20,7 @@ std::string WcharToChar(std::wstring const& wstr)
     return converted_str;
 }
 
-std::wstring CharToWchar(std::string const& str)
+inline std::wstring CharToWchar(std::string const& str)
 {
     //setup converter
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
@@ -36,21 +29,15 @@ std::wstring CharToWchar(std::string const& str)
     return wide;
 }
 
-int UnicodeToMultibyte(std::string const& str, char* buffer,int buffer_size) {
-    return WideCharToMultiByte(CP_ACP, NULL, (wchar_t*)str.data(), str.size(), buffer, buffer_size, NULL, NULL);
-}
-
-
-
-std::string getFileNameFromPath(std::string fileName) {
+inline std::string_view getFileNameFromPath(std::string_view fileName) {
     int var = fileName.find_last_of('\\');
     if (var == std::string::npos && var < fileName.size() - 1)
         return "";
     return fileName.substr(var + 1);
 }
 
-std::string getFileNameFromPath(const char* fileName) {
-    return getFileNameFromPath(std::string(fileName));
+inline std::string getFileNameFromPath(const char* fileName) {
+    return std::string(getFileNameFromPath(std::string(fileName)));
 }
 
 /*

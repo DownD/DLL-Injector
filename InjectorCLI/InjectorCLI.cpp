@@ -65,8 +65,6 @@ ArgsCtx parseArgs(int argc, char* argv[]) {
 
 int main(int argc, char* argv[])
 {
-    DEBUG_LOG("Starting");
-
     ArgsCtx args = parseArgs(argc, argv);
     std::optional<std::string_view> processName = args.getProcessName();
 
@@ -111,7 +109,6 @@ int main(int argc, char* argv[])
             }
             injector.InjectFromPID(*map, args.pid.value(), args.dllPath);
         }
-        DEBUG_LOG("Starting injection2");
     }
     else if(processName) {
         injector.AutoInjectProcess(*map, args.stealHandleJob, args.dllPath, std::string(processName.value()));

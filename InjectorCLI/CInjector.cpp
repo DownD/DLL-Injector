@@ -1,6 +1,4 @@
 #include "CInjector.h"
-#include "BlackBone/Process/Process.h"
-#include "BlackBone/PE/PEImage.h"
 #include <locale>
 #include "psapi.h"
 
@@ -130,7 +128,9 @@ bool CInjector::InjectFromPID(CDllMap& mapper,int pid, std::string dll)
 		DEBUG_LOG("Fail to get handle to process");
 	}
 
-	return mapper.mapImage(h, dll);
+	int result = mapper.mapImage(h, dll);
+	CloseHandle(h);
+	return result;
 }
 
 bool CInjector::InjectFromClickingWindow(CDllMap& mapper, std::string dll)
@@ -281,6 +281,7 @@ BOOL CALLBACK CInjector::__windowCallback(HWND hWnd, LPARAM lParam)
 				DEBUG_LOG("Error injecting into ID: %s, PID:%d", currProcessName.data(), wId);
 			}
 		}
+		CloseHandle(pHandle);
 	}
 	return TRUE;
 }
@@ -330,7 +331,7 @@ void CInjector::__handleRecieverASAPNoReturn(ASAPInjectionInfo* args)
 	}
 }
 
-CManualMap::CManualMap(bool hijackThread): hijackThread(hijackThread)
+CManualMap::CManualMap(blackbone::eLoadFlags flags): flags(flags)
 {
 }
 
@@ -342,11 +343,10 @@ bool CManualMap::mapImage(HANDLE h, std::string dll)
 	blackbone::CustomArgs_t args;
 
 	args.push_back(dll.data(),dll.size());
-	auto flags = blackbone::NoFlags;
 	//std::wcstombs()
 	std::wstring process_path = CharToWchar(dll);
 
-	auto addr = prc.mmap().MapImage(process_path, flags, nullptr, nullptr, &args);
+	auto addr = prc.mmap().MapImage(process_path, this->flags, nullptr, nullptr, &args);
 	if (!addr) {
 		std::string str = "Fail to inject " + dll + " into process with handle " + std::to_string((int)h) + "\n";
 		str += "Status Code = " + std::to_string(addr.status) + "\n";

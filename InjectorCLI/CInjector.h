@@ -6,6 +6,8 @@
 #include <string>
 #include <set>
 #include "util.hpp"
+#include "BlackBone/PE/PEImage.h"
+#include "BlackBone/Process/Process.h"
 
 
 enum MAPPING_TYPE {
@@ -23,10 +25,10 @@ public:
 
 class CManualMap :public CDllMap{
 public:
-	CManualMap(bool hijackThread);
+	CManualMap(blackbone::eLoadFlags flags);
 	bool mapImage(HANDLE h, std::string dll);
 private:
-	bool hijackThread;
+	blackbone::eLoadFlags flags;
 
 };
 

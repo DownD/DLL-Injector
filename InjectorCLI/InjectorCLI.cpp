@@ -33,7 +33,7 @@ ArgsCtx parseArgs(int argc, char* argv[]) {
 
     cli.add_argument("dll_path").help("The dll file to inject");
     cli.add_argument("-m", "--mapping").default_value("STANDART").required().help("Set's the type of mapping, this field can take the following values: STANDART,MANUAL");
-    cli.add_argument("--pid").scan<'i', int>().help("The process id where the dll should be injected");
+    cli.add_argument("--pid").default_value(0).scan<'i', int>().help("The process id where the dll should be injected");
     cli.add_argument("--process_path").help("The injector will also execute the process and inject on it");
     cli.add_argument("-s","--steal_handle_job").default_value(false).implicit_value(true).help("Whether or not to steal the process handle, it uses a special technique to retrive the process handle even before the own process knows it's PID, it can only be used in conjunction with --process_path and should be combined with manualmap.");
     cli.add_argument("--auto_inject").default_value(false).implicit_value(true).help("Use auto inject, will keep running the injector in the background and inject into processes with the process name specified");
@@ -49,8 +49,11 @@ ArgsCtx parseArgs(int argc, char* argv[]) {
 		args.autoInject = cli.get<bool>("--auto_inject");
 		args.autoInjectWindow = cli.get<bool>("--auto_inject_window");
 
-        if (auto fn = cli.present("--pid")) {
+        if (cli.get<int>("--pid") != 0) {
             args.pid = cli.get<int>("--pid");
+        }
+        else {
+            args.pid = std::nullopt;
         }
 	}
     catch (const std::exception& err) {

@@ -75,6 +75,13 @@ private:
 		std::string processName;
 	};
 
+	struct InjectNewProcessByWindowInfo {
+		CDllMap* map;
+		std::string dllPath;
+		std::string windowName;
+		bool isFirstTime;
+	};
+
 
 	//Steals a process handle
 	HANDLE CreateProcessAndStealHandle(std::string& file);
@@ -93,7 +100,5 @@ private:
 	//Used by window scanner stupid callbacks
 	static std::set<int> m_injectedProcesses; //Avoid injecting the same process
 	static bool isFirstTime;
-	static std::set<DWORD> m_lastWnds; //last windows
-	static std::set<DWORD> m_newWnds;	//Current windows
 };
 

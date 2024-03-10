@@ -10,8 +10,8 @@
 */
 
 struct ArgsCtx {
-    bool autoInject;
-    bool autoInjectWindow;
+    std::optional<std::string> autoInjectProcess;
+    std::optional<std::string> autoInjectWindow;
     bool stealHandleJob;
     blackbone::eLoadFlags flags;
     std::optional<int> pid;
@@ -40,8 +40,8 @@ ArgsCtx parseArgs(int argc, char* argv[]) {
     cli.add_argument("--pid").default_value(0).scan<'i', int>().help("The process id where the dll should be injected");
     cli.add_argument("--process_path").help("The injector will also execute the process and inject on it");
     cli.add_argument("--steal_handle_job").default_value(false).implicit_value(true).help("Whether or not to steal the process handle, it uses a special technique to retrive the process handle even before the own process knows it's PID, it can only be used in conjunction with --process_path and should be combined with manualmap.");
-    cli.add_argument("--auto_inject").default_value(false).implicit_value(true).help("Use auto inject, will keep running the injector in the background and inject into processes with the process name specified");
-    cli.add_argument("--auto_inject_window").default_value(false).implicit_value(true).help("Use auto inject and only injects in new windows, will keep running the injector in the background and inject into new windows with the specified name");
+    cli.add_argument("--auto_inject_process").help("Use auto inject, will keep running the injector in the background and inject into processes with the process name specified");
+    cli.add_argument("--auto_inject_window").help("Use auto inject and only injects in new windows, will keep running the injector in the background and inject into new windows with the specified name");
 
     ArgsCtx args;
     try {
@@ -50,11 +50,10 @@ ArgsCtx parseArgs(int argc, char* argv[]) {
 		args.mapping = cli.get<std::string>("mapping") == "STANDART" ? MAPPING_TYPE::LOADLIBRARY : MAPPING_TYPE::MANUAL_MAP;
 		args.processPath = cli.present("--process_path");
 		args.stealHandleJob = cli.get<bool>("--steal_handle_job");
-		args.autoInject = cli.get<bool>("--auto_inject");
-		args.autoInjectWindow = cli.get<bool>("--auto_inject_window");
+		args.autoInjectProcess = cli.present("--auto_inject_process");
+		args.autoInjectWindow = cli.present("--auto_inject_window");
         args.flags = (blackbone::eLoadFlags)(cli.get<int>("--delete_headers") | cli.get<int>("--manual_import_headers") | cli.get<int>("--no_threads"));
 
-        printf("Flags: %d\n", args.flags);
         if (cli.get<int>("--pid") != 0) {
             args.pid = cli.get<int>("--pid");
         }
@@ -74,8 +73,8 @@ ArgsCtx parseArgs(int argc, char* argv[]) {
 
 int main(int argc, char* argv[])
 {
+    DEBUG_LOG("Parsing arguments..\n");
     ArgsCtx args = parseArgs(argc, argv);
-    std::optional<std::string_view> processName = args.getProcessName();
 
 
     DEBUG_LOG("Injecting %s", args.dllPath.c_str());
@@ -83,6 +82,7 @@ int main(int argc, char* argv[])
     CInjector injector;
     std::unique_ptr<CDllMap> map;
 
+    bool injectionResult = false;
 
     //Set mapping type
     if (args.mapping == MAPPING_TYPE::MANUAL_MAP) {
@@ -96,36 +96,22 @@ int main(int argc, char* argv[])
         return EXIT_SUCCESS;
     }
 
-    if (args.autoInjectWindow && processName) {
-        if (!injector.AutoInjectFromWindow(*map,args.dllPath,std::string(processName.value()))){
-            printf("Error Window on injection\n");
-        }
-        return 0;
-    }
+    if (args.autoInjectWindow) {
+        injectionResult = injector.AutoInjectFromWindow(*map, args.dllPath, args.autoInjectWindow.value());
+    } else if (args.autoInjectProcess) {
+        injectionResult = injector.AutoInjectProcess(*map, args.stealHandleJob, args.dllPath, args.autoInjectProcess.value());
+	}else if (args.processPath) {
+        injectionResult = injector.StartProcessAndInject(*map, args.stealHandleJob, args.processPath.value(), args.dllPath);
+    }else if (args.pid) {
+        injectionResult = injector.InjectFromPID(*map, args.pid.value(), args.dllPath);
+	}
 
-    if (!args.autoInject) {
-        //Single normal injection
-        if (processName) {
-            DEBUG_LOG("Starting injection");
-            if (!injector.StartProcessAndInject(*map, args.stealHandleJob, args.processPath.value(), args.dllPath)) {
-                printf("Error on injection\n");
-            }
-        }
-        else {
-            if (!args.pid) {
-                printf("Either a PID or a file path needs to be provided in order to use injection\n");
-                return EXIT_SUCCESS;
-            }
-            injector.InjectFromPID(*map, args.pid.value(), args.dllPath);
-        }
-    }
-    else if(processName) {
-        injector.AutoInjectProcess(*map, args.stealHandleJob, args.dllPath, std::string(processName.value()));
+    if (injectionResult) {
+		printf("Injection successful\n");
+		return EXIT_SUCCESS;
     }
     else {
-        ERROR_LOG("Either a PID or a file path needs to be provided in order to use injection");
+        ERROR_LOG("Injection failed\n");
     }
-    DEBUG_LOG("Exiting");
-
-    return EXIT_SUCCESS;
+    return EXIT_FAILURE;
 }

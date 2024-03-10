@@ -5,8 +5,6 @@
 
 std::set<int> CInjector::m_lastProcesses;
 std::set<int> CInjector::m_injectedProcesses; //Avoid injecting the same process
-std::set<DWORD> CInjector::m_lastWnds; //last windows
-std::set<DWORD> CInjector::m_newWnds;	//Current windows
 bool CInjector::isFirstTime= true;
 
 CInjector::CInjector()
@@ -18,18 +16,23 @@ CInjector::~CInjector()
 
 }
 
-bool CInjector::AutoInjectFromWindow(CDllMap& mapper, std::string dll, std::string processName)
+bool CInjector::AutoInjectFromWindow(CDllMap& mapper, std::string dll, std::string windowName)
 {
+	InjectNewProcessByWindowInfo args;
+	args.dllPath = dll;
+	args.map = &mapper;
+	args.windowName = windowName;
+	args.isFirstTime = true;
+
+	printf("Starting auto injection from window dll=%s windowName=%s\n", dll.c_str(), windowName.c_str());
+	EnumWindows(__windowCallback, (LPARAM)&args);
+
+	args.isFirstTime = false;
 	while (1) {
-		InjectNewProcessInfo args;
-		args.dllPath = dll;
-		args.map = &mapper;
-		args.processName = processName;
+
+		DEBUG_LOG("Waiting for window");
 
 		EnumWindows(__windowCallback, (LPARAM)&args);
-		m_lastWnds = m_newWnds;
-		m_newWnds.clear();
-		isFirstTime = false;
 		Sleep(1500);
 	}
 	return false;
@@ -198,7 +201,7 @@ void CInjector::__InjectNewProcess(InjectNewProcessInfo* args)
 {
 	// Get the list of process identifiers.
 	std::string processName = args->processName;
-	static bool itsFirsTime = true; //Used to not inject in processes already in memory
+	static bool itsFirsTime = true; //Used to not inject in processes already in running
 	while (1) {
 		DWORD aProcesses[1024], cbNeeded, cProcesses;
 		unsigned int i;
@@ -247,41 +250,48 @@ void CInjector::__InjectNewProcess(InjectNewProcessInfo* args)
 BOOL CALLBACK CInjector::__windowCallback(HWND hWnd, LPARAM lParam)
 {
 		//Inject
-	InjectNewProcessInfo* args = (InjectNewProcessInfo*)lParam;
+	InjectNewProcessByWindowInfo* args = (InjectNewProcessByWindowInfo*)lParam;
 	DWORD wId = 0;
 	GetWindowThreadProcessId((HWND)hWnd,&wId);
 	if (wId) {
-		m_newWnds.insert(wId);
+		//Avoid current windows
+		//std::string windowName(GetWindowTextLengthA(hWnd),0);
+		static char windowName[256] = { 0 };
+		GetWindowTextA(hWnd, windowName, 256);
 
-		if (m_lastWnds.count(wId)) {
+		//DEBUG_LOG("Window Detected : %s, PID:%d", windowName, wId);
+
+		if (args->windowName.compare(windowName) != 0) { 
+			//DEBUG_LOG("Window name %s does not match %s",windowName, args->windowName.data());
 			return TRUE;
 		}
 
-		//Avoid current windows
-		if (isFirstTime) {
+		// Do not inject in already existent windows
+		if (args->isFirstTime) {
+			DEBUG_LOG("Window already exists, PID=%d", wId);
+			m_injectedProcesses.insert(wId);
 			return true;
 		}
-		auto pHandle = OpenProcess(PROCESS_ALL_ACCESS, true, (DWORD)wId);
-		if (!pHandle) {
-			DEBUG_LOG("Error opening process ID:%d", wId);
-			return TRUE;
-		}
-		char buffer[MAX_PATH];
-		GetModuleFileNameExA(pHandle, 0, buffer, MAX_PATH);
-		std::string currProcessName = getFileNameFromPath(buffer);
 
-		DEBUG_LOG("New window created by process: %s, PID:%d", currProcessName.data(), wId);
-		if (currProcessName.compare(args->processName) == 0 && !m_injectedProcesses.count(wId)) {
+		if (!m_injectedProcesses.count(wId)) {
+			DEBUG_LOG("New Window Detected : %s, PID:%d", args->windowName.data(), wId);
+			auto pHandle = OpenProcess(PROCESS_ALL_ACCESS, true, (DWORD)wId);
+			if (!pHandle) {
+				DEBUG_LOG("Error opening process ID:%d", wId);
+				return TRUE;
+			}
+			char buffer[MAX_PATH];
+			GetModuleFileNameExA(pHandle, 0, buffer, MAX_PATH);
 
 			if (args->map->mapImage(pHandle, args->dllPath)) {
-				DEBUG_LOG("Success injecting into ID: %s, PID:%d", currProcessName.data(), wId);
+				DEBUG_LOG("Success injecting into PID:%d", wId);
 				m_injectedProcesses.insert(wId);
 			}
 			else {
-				DEBUG_LOG("Error injecting into ID: %s, PID:%d", currProcessName.data(), wId);
+				DEBUG_LOG("Error injecting into PID:%d", wId);
 			}
+			CloseHandle(pHandle);
 		}
-		CloseHandle(pHandle);
 	}
 	return TRUE;
 }

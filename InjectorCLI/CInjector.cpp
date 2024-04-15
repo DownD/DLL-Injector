@@ -97,28 +97,37 @@ bool CInjector::AutoInjectProcess(CDllMap& mapper, bool stealHandleJob, std::str
 
 bool CInjector::StartProcessAndInject(CDllMap& mapper, bool stealHandleJob, std::string file, std::string dll)
 {
-	HANDLE h = 0;
+	bool return_val = false;
 	DEBUG_LOG("Creating and injecting into process dll=%s process=%s", dll.c_str(), file.c_str());
 
 	if (stealHandleJob) {
-		h = CreateProcessAndStealHandle(file);
+		HANDLE h = CreateProcessAndStealHandle(file);
 		if (h == 0) {
 			return false;
 		}
+		return_val = mapper.mapImage(h, dll);
+		CloseHandle(h);
 	}
 	else {
 		STARTUPINFOA si = { 0 };
 		PROCESS_INFORMATION pi = { 0 };
 
 		std::string path = file.substr(0, file.find_last_of("\\/"));
-		if (!CreateProcessA(file.c_str(), NULL, NULL, NULL, FALSE, NULL, NULL, path.c_str(), &si, &pi)) {
+		if (!CreateProcessA(file.c_str(), NULL, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, path.c_str(), &si, &pi)) {
 			ERROR_LOG("Could not create process error_code=%#x", GetLastError());
 			return false;
 		}
-		h = pi.hProcess;
+		HANDLE h = pi.hProcess;
+		DEBUG_LOG("Process created in suspended state");
+		return_val = mapper.mapImage(h, dll);
+		DEBUG_LOG("Image had been mapped");
+		if(ResumeThread(pi.hThread) == -1);
+		{
+			ERROR_LOG("Could not resume thread error_code=%#x", GetLastError());
+			return false;
+		}
+		CloseHandle(h);
 	}
-	bool return_val= mapper.mapImage(h, dll);
-	CloseHandle(h);
 	return return_val;
 }
 

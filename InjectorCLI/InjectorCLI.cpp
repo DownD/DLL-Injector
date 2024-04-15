@@ -33,7 +33,7 @@ ArgsCtx parseArgs(int argc, char* argv[]) {
     argparse::ArgumentParser cli("InjectorCLI");
 
     cli.add_argument("dll_path").help("The dll file to inject");
-    cli.add_argument("-m", "--mapping").default_value("STANDART").required().help("Set's the type of mapping, this field can take the following values: STANDART,MANUAL");
+    cli.add_argument("-m", "--mapping").default_value("STANDART").help("Set's the type of mapping, this field can take the following values: STANDART,MANUAL");
     cli.add_argument("-x", "--delete_headers").default_value(0).implicit_value((int)blackbone::eLoadFlags::WipeHeader).help("Delete PE headers after injection (Only for manual mapping)");
     cli.add_argument("-i", "--manual_import_headers").default_value(0).implicit_value((int)blackbone::eLoadFlags::ManualImports).help("Manually map import libraries (Only for manual mapping)");
     cli.add_argument("-t", "--no_threads").default_value(0).implicit_value((int)blackbone::eLoadFlags::NoThreads).help("Use thread hijack and do not create new threads (Only for manual mapping)");
@@ -48,8 +48,8 @@ ArgsCtx parseArgs(int argc, char* argv[]) {
 		cli.parse_args(argc, argv);
 		args.dllPath = cli.get<std::string>("dll_path");
 		args.mapping = cli.get<std::string>("mapping") == "STANDART" ? MAPPING_TYPE::LOADLIBRARY : MAPPING_TYPE::MANUAL_MAP;
-		args.processPath = cli.present("--process_path");
 		args.stealHandleJob = cli.get<bool>("--steal_handle_job");
+		args.processPath = cli.present("--process_path");
 		args.autoInjectProcess = cli.present("--auto_inject_process");
 		args.autoInjectWindow = cli.present("--auto_inject_window");
         args.flags = (blackbone::eLoadFlags)(cli.get<int>("--delete_headers") | cli.get<int>("--manual_import_headers") | cli.get<int>("--no_threads"));
@@ -98,13 +98,17 @@ int main(int argc, char* argv[])
 
     if (args.autoInjectWindow) {
         injectionResult = injector.AutoInjectFromWindow(*map, args.dllPath, args.autoInjectWindow.value());
-    } else if (args.autoInjectProcess) {
+    }else if (args.autoInjectProcess) {
         injectionResult = injector.AutoInjectProcess(*map, args.stealHandleJob, args.dllPath, args.autoInjectProcess.value());
 	}else if (args.processPath) {
         injectionResult = injector.StartProcessAndInject(*map, args.stealHandleJob, args.processPath.value(), args.dllPath);
     }else if (args.pid) {
         injectionResult = injector.InjectFromPID(*map, args.pid.value(), args.dllPath);
-	}
+    }
+    else {
+        ERROR_LOG("No injection method specified\n");
+        return EXIT_FAILURE;
+    }
 
     if (injectionResult) {
 		printf("Injection successful\n");

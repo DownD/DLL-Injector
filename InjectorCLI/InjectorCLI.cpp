@@ -4,10 +4,12 @@
 #include <optional>
 #include <argparse/argparse.hpp>
 
-/**
-* This is a custom project configuration structure where you can store the
-* parsed information.
-*/
+
+std::string getFullPath(std::string_view fileName) {
+    char buffer[MAX_PATH]; // Does this uses RVO?
+    GetFullPathNameA(fileName.data(), MAX_PATH, buffer, NULL);
+    return buffer;
+}
 
 struct ArgsCtx {
     std::optional<std::string> autoInjectProcess;
@@ -76,7 +78,7 @@ int main(int argc, char* argv[])
     DEBUG_LOG("Parsing arguments..\n");
     ArgsCtx args = parseArgs(argc, argv);
 
-
+    args.dllPath = getFullPath(args.dllPath);
     DEBUG_LOG("Injecting %s", args.dllPath.c_str());
 
     CInjector injector;
